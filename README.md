@@ -336,13 +336,20 @@ Frontend runs at `http://localhost:5173/`
 
 # Running Tests
 
-Backend Tests
+## Backend Tests
 
 ```bash
 pytest
 ```
 
-Coverage Reports
+## Test Results
+
+- **45 tests passed** ✅
+- **Coverage:** 99% (669 statements, 5 missing)
+
+[View Coverage Report](file:///e:/LEARNING_COURSES/Car-DealerShip-Inventory-System/backend/htmlcov/index.html)
+
+## Coverage Reports
 
 ```bash
 coverage run -m pytest

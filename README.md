@@ -8,7 +8,7 @@ CarShip enables users to browse available vehicles, search inventory, purchase v
 
 ## Demo Video
 
-[![CarShip Demo Video](https://img.youtube.com/vi/PJKjMy5G2rE/maxresdefault.jpg)](https://youtu.be/PJKjMy5G2rE)
+[![CarShip Demo Video](image-1.jpg)](https://youtu.be/PJKjMy5G2rE)
 
 ---
 

@@ -1,32 +1,31 @@
 # Business logic for Vehicle operations
 
-from django.db.models import Q
 from .models import Vehicle
-from django.shortcuts import get_object_or_404
 
 class VehicleService:
-    # Service layer
+    """
+    Service layer providing business logic for vehicle operations.
+    """
 
     @staticmethod
     def create_vehicle(serializer):
-        # Cretes a new vehicle using validated serializer data.
-        # Returns newly created vehicle
-        # Arguments conssis of a validated serializer(vehicle) instance
+        """
+        Create a new vehicle using validated serializer data.
+        """
         return serializer.save()
     
     @staticmethod
     def get_all_vehicles():
-        # Return all vehicles.
-        
-
+        """
+        Retrieve all vehicles in the inventory.
+        """
         return Vehicle.objects.all()
 
     @staticmethod
     def search_vehicles(filters):
-     
-        # Search vehicles using optional filters.
-        
-
+        """
+        Search vehicles based on optional filters (make, model, category, price range).
+        """
         queryset = Vehicle.objects.all()
 
         make = filters.get("make")
@@ -65,28 +64,37 @@ class VehicleService:
 
     @staticmethod
     def update_vehicle(serializer):
-        # Update an existing vehicle.
+        """
+        Update an existing vehicle using validated serializer data.
+        """
         return serializer.save()
     
     @staticmethod
     def delete_vehicle(vehicle):
+        """
+        Delete a vehicle from the inventory.
+        """
         vehicle.delete()
 
     @staticmethod
     def purchase_vehicle(vehicle):
-        if vehicle.quantity<=0:
+        """
+        Purchase a vehicle by decreasing its inventory quantity by one.
+        """
+        if vehicle.quantity <= 0:
             raise ValueError("Vehicle is out of stock.")
         
-        vehicle.quantity -=1
+        vehicle.quantity -= 1
         vehicle.save()
 
         return vehicle
 
     @staticmethod
-    def restock_vehicle(vehicle,quantity):
-        # Increase vehicle inventory
-
-        if quantity <=0 :
+    def restock_vehicle(vehicle, quantity):
+        """
+        Increase the inventory quantity of a vehicle by a specified amount.
+        """
+        if quantity <= 0:
             raise ValueError(
                 "Restock quantity must be greater than zero."
             )

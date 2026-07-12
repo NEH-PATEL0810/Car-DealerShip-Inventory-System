@@ -5,6 +5,9 @@ import uuid
 # Create your models here.
 
 class Vehicle(models.Model):
+    """
+    Vehicle model representing an inventory item in the dealership.
+    """
     CATEGORY_CHOICES = [
         ("SUV","SUV"),
         ("Sedan","Sedan"),
@@ -31,5 +34,8 @@ class Vehicle(models.Model):
         ordering = ["make","model"]
 
     def __str__(self):
+        """
+        String representation of the vehicle.
+        """
         return f"{self.make}{self.model}"
     

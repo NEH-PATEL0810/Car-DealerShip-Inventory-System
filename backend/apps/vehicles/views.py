@@ -7,12 +7,16 @@ from .serializers import VehicleSerializer
 from .services import VehicleService
 from .models import Vehicle
 
-# API Endpoint for listing and creating vehicles.
-
 class VehicleAPIView(APIView):
+    """
+    APIView for managing vehicle collection and individual instances.
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        """
+        List all vehicles.
+        """
         vehicles = VehicleService.get_all_vehicles()
         serializer = VehicleSerializer(vehicles, many=True)
 
@@ -26,6 +30,9 @@ class VehicleAPIView(APIView):
         )
 
     def post(self, request):
+        """
+        Create a new vehicle.
+        """
         serializer = VehicleSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(
@@ -48,6 +55,9 @@ class VehicleAPIView(APIView):
         )
 
     def put(self, request, pk):
+        """
+        Update an existing vehicle details.
+        """
         vehicle = get_object_or_404(
             Vehicle,
             pk=pk,
@@ -84,6 +94,9 @@ class VehicleAPIView(APIView):
         )
 
     def delete(self, request, pk):
+        """
+        Delete a vehicle. Only accessible by administrators (staff users).
+        """
         vehicle = get_object_or_404(
             Vehicle,
             pk=pk,
@@ -107,14 +120,15 @@ class VehicleAPIView(APIView):
 
 
 class VehicleSearchAPIView(APIView):
-    
-    # API endpoint for searching vehicles.
-    
-
+    """
+    APIView for searching vehicles using query parameters.
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-
+        """
+        Search vehicles with filters applied.
+        """
         vehicles = VehicleService.search_vehicles(
             request.query_params
         )
@@ -132,31 +146,28 @@ class VehicleSearchAPIView(APIView):
             },
             status=status.HTTP_200_OK,
         )
-    
 
 
 class PurchaseVehicleAPIView(APIView):
-    
-    # Purchase a vehicle.
-    
-
+    """
+    APIView for purchasing a vehicle, which decrements its stock.
+    """
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
-
+        """
+        Decrease the stock of a vehicle by 1.
+        """
         vehicle = get_object_or_404(
             Vehicle,
             pk=pk,
         )
 
         try:
-
             vehicle = VehicleService.purchase_vehicle(
                 vehicle
             )
-
         except ValueError as e:
-
             return Response(
                 {
                     "message": str(e),
@@ -174,18 +185,21 @@ class PurchaseVehicleAPIView(APIView):
             status=status.HTTP_200_OK,
         )
 
-class RestockVehicleAPIView(APIView):
 
+class RestockVehicleAPIView(APIView):
+    """
+    APIView for restocking vehicle quantities. Only accessible by administrators.
+    """
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
-
+        """
+        Increase the vehicle quantity.
+        """
         if not request.user.is_staff:
-
             return Response(
                 {
-                    "message":
-                    "Only administrators can restock vehicles."
+                    "message": "Only administrators can restock vehicles."
                 },
                 status=status.HTTP_403_FORBIDDEN,
             )
@@ -196,28 +210,21 @@ class RestockVehicleAPIView(APIView):
         )
 
         quantity = request.data.get("quantity")
-
         if quantity is None:
-
             return Response(
                 {
-                    "message":
-                    "Quantity is required."
+                    "message": "Quantity is required."
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         try:
-
             quantity = int(quantity)
-
             vehicle = VehicleService.restock_vehicle(
                 vehicle,
                 quantity,
             )
-
         except ValueError as e:
-
             return Response(
                 {
                     "message": str(e),
@@ -231,8 +238,7 @@ class RestockVehicleAPIView(APIView):
 
         return Response(
             {
-                "message":
-                "Vehicle restocked successfully.",
+                "message": "Vehicle restocked successfully.",
                 "data": serializer.data,
             },
             status=status.HTTP_200_OK,

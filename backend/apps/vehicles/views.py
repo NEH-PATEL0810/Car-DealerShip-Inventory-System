@@ -83,6 +83,28 @@ class VehicleAPIView(APIView):
             status=status.HTTP_200_OK,
         )
 
+    def delete(self, request, pk):
+        vehicle = get_object_or_404(
+            Vehicle,
+            pk=pk,
+        )
+
+        if not request.user.is_staff:
+            return Response(
+                {
+                    "message": "Only administrators can delete vehicles."
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        VehicleService.delete_vehicle(
+            vehicle
+        )
+
+        return Response(
+            status=status.HTTP_204_NO_CONTENT
+        )
+
 
 class VehicleSearchAPIView(APIView):
     

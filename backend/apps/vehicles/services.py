@@ -68,5 +68,9 @@ class VehicleService:
         # Update an existing vehicle.
         return serializer.save()
     
+    @staticmethod
+    def delete_vehicle(vehicle):
+        vehicle.delete()
+    
 
     

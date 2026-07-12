@@ -2,6 +2,7 @@
 
 from django.db.models import Q
 from .models import Vehicle
+from django.shortcuts import get_object_or_404
 
 class VehicleService:
     # Service layer
@@ -60,3 +61,12 @@ class VehicleService:
             )
 
         return queryset
+    
+
+    @staticmethod
+    def update_vehicle(serializer):
+        # Update an existing vehicle.
+        return serializer.save()
+    
+
+    

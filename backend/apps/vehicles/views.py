@@ -1,9 +1,11 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import VehicleSerializer
 from .services import VehicleService
+from .models import Vehicle
 
 # API Endpoint for listing and creating vehicles.
 
@@ -45,6 +47,42 @@ class VehicleAPIView(APIView):
             status=status.HTTP_201_CREATED,
         )
 
+    def put(self, request, pk):
+        vehicle = get_object_or_404(
+            Vehicle,
+            pk=pk,
+        )
+
+        serializer = VehicleSerializer(
+            vehicle,
+            data=request.data,
+        )
+
+        if not serializer.is_valid():
+            return Response(
+                {
+                    "message": "Vehicle update failed.",
+                    "errors": serializer.errors,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        vehicle = VehicleService.update_vehicle(
+            serializer
+        )
+
+        response_serializer = VehicleSerializer(
+            vehicle
+        )
+
+        return Response(
+            {
+                "message": "Vehicle updated successfully.",
+                "data": response_serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
+
 
 class VehicleSearchAPIView(APIView):
     
@@ -72,3 +110,4 @@ class VehicleSearchAPIView(APIView):
             },
             status=status.HTTP_200_OK,
         )
+    

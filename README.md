@@ -8,7 +8,7 @@ CarShip enables users to browse available vehicles, search inventory, purchase v
 
 ## Demo Video
 
-[![CarShip Demo Video](image-1.jpg)](https://youtu.be/PJKjMy5G2rE)
+[![CarShip Demo Video](https://i.ytimg.com/vi/PJKjMy5G2rE/hqdefault.jpg)](https://youtu.be/PJKjMy5G2rE)
 
 ---
 
@@ -347,7 +347,7 @@ pytest
 - **45 tests passed** ✅
 - **Coverage:** 99% (669 statements, 5 missing)
 
-[View Coverage Report (GitHub)](https://github.com/NEH-PATEL0810/Car-DealerShip-Inventory-System/blob/main/backend/htmlcov/index.html)
+[View Coverage Report](file:///e:/LEARNING_COURSES/Car-DealerShip-Inventory-System/backend/htmlcov/index.html)
 
 ## Coverage Reports
 

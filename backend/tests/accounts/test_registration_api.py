@@ -20,7 +20,7 @@ class TestUserRegistration:
     Test suite for user registration API endpoint.
     """
 
-    REGISTER_URL = "/api/auth/register/"
+    # REGISTER_URL = "/api/auth/register/"
 
     def test_user_can_register(self, api_client):
         payload={
@@ -30,7 +30,8 @@ class TestUserRegistration:
         }
 
         response = api_client.post(
-            self.REGISTER_URL,
+            # self.REGISTER_URL,
+            reverse("register"),
             payload,
             format="json",
         )
@@ -53,7 +54,8 @@ class TestUserRegistration:
         }
 
         response = api_client.post(
-            self.REGISTER_URL,
+            # self.REGISTER_URL,
+            reverse("register"),
             payload,
             format="json",
         )
@@ -74,7 +76,8 @@ class TestUserRegistration:
         }
 
         response = api_client.post(
-            self.REGISTER_URL,
+            # self.REGISTER_URL,
+            reverse("register"),
             payload,
             format="json",
         )
@@ -88,7 +91,8 @@ class TestUserRegistration:
         }
 
         response = api_client.post(
-            self.REGISTER_URL,
+            # self.REGISTER_URL,
+            reverse("register"),
             payload,
             format="json",
         )
@@ -102,7 +106,8 @@ class TestUserRegistration:
         }
 
         response = api_client.post(
-            self.REGISTER_URL,
+            # self.REGISTER_URL,
+            reverse("register"),
             payload,
             format="json",
         )
@@ -117,7 +122,8 @@ class TestUserRegistration:
         }
 
         response = api_client.post(
-            self.REGISTER_URL,
+            # self.REGISTER_URL,
+            reverse("register"),
             payload,
             format = "json",
         )

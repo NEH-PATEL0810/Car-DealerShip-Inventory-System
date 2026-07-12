@@ -8,6 +8,10 @@ import sys
 def main():
     """Run administrative tasks."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+    
+    # Add apps directory to path so we can import apps directly
+    import pathlib
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent / "apps"))
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

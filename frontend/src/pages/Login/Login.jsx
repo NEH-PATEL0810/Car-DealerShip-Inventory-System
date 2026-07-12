@@ -170,7 +170,7 @@ function Login() {
                             {loading ? <CircularProgress size={24} color="inherit" /> : "Sign In"}
                         </Button>
 
-                        <Box display="flex" justifyContent="center" sx={{ mt: 3 }}>
+                        <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
                             <Typography variant="body2" color="text.secondary">
                                 New to CarShip?{" "}
                                 <Link

@@ -183,7 +183,7 @@ function Register() {
                             {loading ? <CircularProgress size={24} color="inherit" /> : "Register"}
                         </Button>
 
-                        <Box display="flex" justifyContent="center" sx={{ mt: 3 }}>
+                        <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
                             <Typography variant="body2" color="text.secondary">
                                 Already have an account?{" "}
                                 <Link

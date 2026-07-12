@@ -16,67 +16,69 @@ CarShip enables users to browse available vehicles, search inventory, purchase v
 
 ### Home Page
 
-> *(Insert Screenshot)*
+> ![alt text](image.png)
 
 ---
 
 ### Login
 
-> *(Insert Screenshot)*
+> ![alt text](image-1.png)
 
 ---
 
 ### Registration
 
-> *(Insert Screenshot)*
+> ![alt text](image-2.png)
 
 ---
 
 ### Dashboard
 
-> *(Insert Screenshot)*
+> ![alt text](image-3.png)
 
 ---
 
 ### Vehicle Search & Filters
 
-> *(Insert Screenshot)*
+> ![alt text](image-4.png)
+> ![alt text](image-5.png)
 
 ---
 
 ### Purchase Vehicle
 
-> *(Insert Screenshot)*
-
+> ![alt text](image-6.png)
+> ![alt text](image-7.png)
 ---
 
 ### Admin Dashboard
 
-> *(Insert Screenshot)*
-
+>![alt text](image-8.png)
+>![alt text](image-9.png)
+>![alt text](image-10.png)
 ---
 
 ### Add Vehicle
 
-> *(Insert Screenshot)*
-
+> ![alt text](image-11.png)
+> 
 ---
 
 ### Update Vehicle
 
-> *(Insert Screenshot)*
+> ![alt text](image-12.png)
 
 ---
 
 ### Delete Vehicle
 
-> *(Insert Screenshot)*
+> ![alt text](image-13.png)
 
 ---
 
 ### Restock Vehicle
 
-> *(Insert Screenshot)*
+> ![alt text](image-14.png)
 
 ---
 

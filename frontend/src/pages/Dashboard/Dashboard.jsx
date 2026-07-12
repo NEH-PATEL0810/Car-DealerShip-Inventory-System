@@ -457,7 +457,7 @@ function Dashboard() {
 
                         {/* VEHICLES FLEET GRID */}
                         {loading ? (
-                            <Box display="flex" justifyContent="center" py={10}>
+                            <Box sx={{ display: "flex", justifyContent: "center", py: 10 }}>
                                 <CircularProgress size={50} color="primary" />
                             </Box>
                         ) : vehicles.length === 0 ? (
@@ -517,7 +517,7 @@ function Dashboard() {
                                                 </Box>
 
                                                 <CardContent sx={{ flexGrow: 1, p: 3, display: "flex", flexDirection: "column" }}>
-                                                    <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={1}>
+                                                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 1 }}>
                                                         <Box>
                                                             <Typography variant="body2" color="#B6BDC8" sx={{ letterSpacing: 0.5 }}>
                                                                 {car.make}
@@ -533,21 +533,21 @@ function Dashboard() {
 
                                                     {/* Spec Row */}
                                                     <Stack direction="row" spacing={2} sx={{ mt: 2, mb: 3 }}>
-                                                        <Box display="flex" alignItems="center" gap={0.5}>
+                                                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                                                             <Icons.Fuel />
                                                             <Typography variant="caption" color="#B6BDC8">Petrol</Typography>
                                                         </Box>
-                                                        <Box display="flex" alignItems="center" gap={0.5}>
+                                                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                                                             <Icons.Transmission />
                                                             <Typography variant="caption" color="#B6BDC8">Auto</Typography>
                                                         </Box>
-                                                        <Box display="flex" alignItems="center" gap={0.5}>
+                                                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                                                             <Icons.Star />
                                                             <Typography variant="caption" color="white" fontWeight={600}>4.8</Typography>
                                                         </Box>
                                                     </Stack>
 
-                                                    <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ mt: "auto", pt: 2, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                                                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mt: "auto", pt: 2, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
                                                         <Typography variant="h5" color="white" sx={{ fontWeight: 800 }}>
                                                             ${parseFloat(car.price).toLocaleString()}
                                                         </Typography>
@@ -653,13 +653,13 @@ function Dashboard() {
                             </Typography>
 
                             <Box sx={{ mt: 3, p: 2, borderRadius: "12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                                <Box display="flex" justifyContent="space-between" sx={{ mb: 1 }}>
+                                <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
                                     <Typography variant="body2" color="#B6BDC8">Price per unit</Typography>
                                     <Typography variant="body2" color="white" fontWeight={600}>
                                         ${parseFloat(selectedVehicle.price).toLocaleString()}
                                     </Typography>
                                 </Box>
-                                <Box display="flex" justifyContent="space-between" sx={{ pt: 1, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                                <Box sx={{ display: "flex", justifyContent: "space-between", pt: 1, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
                                     <Typography variant="body1" color="white" fontWeight={700}>Total Due</Typography>
                                     <Typography variant="body1" color="#3B82F6" fontWeight={800}>
                                         ${parseFloat(selectedVehicle.price).toLocaleString()}
@@ -708,7 +708,7 @@ function Dashboard() {
                     }
                 }}
             >
-                <Box display="flex" justifyContent="center" sx={{ mb: 2 }}>
+                <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
                     <Box
                         sx={{
                             width: 60,

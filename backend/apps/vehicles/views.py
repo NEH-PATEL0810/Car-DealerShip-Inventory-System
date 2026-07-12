@@ -133,3 +133,43 @@ class VehicleSearchAPIView(APIView):
             status=status.HTTP_200_OK,
         )
     
+
+
+class PurchaseVehicleAPIView(APIView):
+    
+    # Purchase a vehicle.
+    
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+
+        vehicle = get_object_or_404(
+            Vehicle,
+            pk=pk,
+        )
+
+        try:
+
+            vehicle = VehicleService.purchase_vehicle(
+                vehicle
+            )
+
+        except ValueError as e:
+
+            return Response(
+                {
+                    "message": str(e),
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        serializer = VehicleSerializer(vehicle)
+
+        return Response(
+            {
+                "message": "Vehicle purchased successfully.",
+                "data": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )

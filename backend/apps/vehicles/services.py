@@ -71,6 +71,16 @@ class VehicleService:
     @staticmethod
     def delete_vehicle(vehicle):
         vehicle.delete()
+
+    @staticmethod
+    def purchase_vehicle(vehicle):
+        if vehicle.quantity<=0:
+            raise ValueError("Vehicle is out of stock.")
+        
+        vehicle.quantity -=1
+        vehicle.save()
+
+        return vehicle
     
 
     

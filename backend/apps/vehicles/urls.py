@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import VehicleAPIView, VehicleSearchAPIView
+from .views import VehicleAPIView, VehicleSearchAPIView,PurchaseVehicleAPIView
 
 urlpatterns = [
     path(
@@ -17,5 +17,10 @@ urlpatterns = [
         VehicleAPIView.as_view(),
         name="vehicle-detail",
     ),
+    path(
+    "<uuid:pk>/purchase/",
+    PurchaseVehicleAPIView.as_view(),
+    name="vehicle-purchase",
+),
 ]
 

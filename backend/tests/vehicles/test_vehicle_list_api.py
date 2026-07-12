@@ -56,7 +56,7 @@ class TestVehicleListAPI:
         )
 
         response = authenticated_client.get(
-            reverse("vehicle-list")
+            reverse("vehicles")
         )
 
         assert response.status_code == 200
@@ -73,7 +73,7 @@ class TestVehicleListAPI:
     ):
 
         response = authenticated_client.get(
-            reverse("vehicle-list")
+            reverse("vehicles")
         )
 
         assert response.status_code == 200
@@ -90,7 +90,7 @@ class TestVehicleListAPI:
     ):
 
         response = api_client.get(
-            reverse("vehicle-list")
+            reverse("vehicles")
         )
 
         assert response.status_code == 401

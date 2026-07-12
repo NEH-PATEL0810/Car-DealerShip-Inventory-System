@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import VehicleCreateAPIView
+from .views import VehicleAPIView
 
 urlpatterns = [
     path(
         "",
-        VehicleCreateAPIView.as_view(),
-        name="vehicle-create",
+        VehicleAPIView.as_view(),
+        name="vehicles",
     ),
 ]

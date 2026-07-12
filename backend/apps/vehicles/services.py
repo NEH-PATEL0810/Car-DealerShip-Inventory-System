@@ -11,3 +11,10 @@ class VehicleService:
         # Returns newly created vehicle
         # Arguments conssis of a validated serializer(vehicle) instance
         return serializer.save()
+    
+    @staticmethod
+    def get_all_vehicles():
+        # Return all vehicles.
+        
+
+        return Vehicle.objects.all()

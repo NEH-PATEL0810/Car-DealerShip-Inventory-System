@@ -45,7 +45,7 @@ class TestVehicleAPI:
         }
 
         response = authenticated_client.post(
-            reverse("vehicle-create"),
+            reverse("vehicles"),
             payload,
             format="json",
         )
@@ -78,7 +78,7 @@ class TestVehicleAPI:
         }
 
         response = api_client.post(
-            reverse("vehicle-create"),
+            reverse("vehicles"),
             payload,
             format="json",
         )
@@ -98,7 +98,7 @@ class TestVehicleAPI:
         }
 
         response = authenticated_client.post(
-            reverse("vehicle-create"),
+            reverse("vehicles"),
             payload,
             format="json",
         )
@@ -118,7 +118,7 @@ class TestVehicleAPI:
         }
 
         response = authenticated_client.post(
-            reverse("vehicle-create"),
+            reverse("vehicles"),
             payload,
             format="json",
         )

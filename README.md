@@ -16,69 +16,70 @@ CarShip enables users to browse available vehicles, search inventory, purchase v
 
 ### Home Page
 
-> ![alt text](image.png)
+> ![Home Page](screenshots/home_page.png)
 
 ---
 
 ### Login
 
-> ![alt text](image-1.png)
+> ![Login](screenshots/login.png)
 
 ---
 
 ### Registration
 
-> ![alt text](image-2.png)
+> ![Registration](screenshots/registration.png)
 
 ---
 
 ### Dashboard
 
-> ![alt text](image-3.png)
+> ![Dashboard](screenshots/dashboard.png)
 
 ---
 
 ### Vehicle Search & Filters
 
-> ![alt text](image-4.png)
-> ![alt text](image-5.png)
+> ![Vehicle Search](screenshots/vehicle_search.png)
+> ![Vehicle Filters](screenshots/vehicle_filters.png)
 
 ---
 
 ### Purchase Vehicle
 
-> ![alt text](image-6.png)
-> ![alt text](image-7.png)
+> ![Purchase Vehicle Step 1](screenshots/purchase_vehicle_1.png)
+> ![Purchase Vehicle Step 2](screenshots/purchase_vehicle_2.png)
 ---
 
 ### Admin Dashboard
 
->![alt text](image-8.png)
->![alt text](image-9.png)
->![alt text](image-10.png)
+> ![Admin Dashboard](screenshots/admin_dashboard.png)
+> ![Admin Sales Logs](screenshots/admin_sales_logs.png)
+> ![Admin Purchases Grid](screenshots/admin_purchases_grid.png)
 ---
 
 ### Add Vehicle
 
-> ![alt text](image-11.png)
-> 
+> ![Add Vehicle](screenshots/add_vehicle.png)
+
 ---
 
 ### Update Vehicle
 
-> ![alt text](image-12.png)
+> ![Update Vehicle](screenshots/update_vehicle.png)
 
 ---
 
 ### Delete Vehicle
 
-> ![alt text](image-13.png)
+> ![Delete Vehicle](screenshots/delete_vehicle.png)
 
 ---
 
 ### Restock Vehicle
 
-> ![alt text](image-14.png)
+> ![Restock Vehicle](screenshots/restock_vehicle.png)
+
 
 ---
 
@@ -347,7 +348,9 @@ pytest
 - **45 tests passed** ✅
 - **Coverage:** 99% (669 statements, 5 missing)
 
-[View Coverage Report](file:///e:/LEARNING_COURSES/Car-DealerShip-Inventory-System/backend/htmlcov/index.html)
+To generate and view the detailed HTML coverage report locally:
+1. Run the coverage generation commands in the **Coverage Reports** section below.
+2. Open `backend/htmlcov/index.html` in your browser.
 
 ## Coverage Reports
 

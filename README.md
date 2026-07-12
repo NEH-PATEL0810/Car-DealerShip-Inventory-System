@@ -347,7 +347,7 @@ pytest
 - **45 tests passed** ✅
 - **Coverage:** 99% (669 statements, 5 missing)
 
-[View Coverage Report](file:///e:/LEARNING_COURSES/Car-DealerShip-Inventory-System/backend/htmlcov/index.html)
+[View Coverage Report (GitHub)](https://github.com/NEH-PATEL0810/Car-DealerShip-Inventory-System/blob/main/backend/htmlcov/index.html)
 
 ## Coverage Reports
 

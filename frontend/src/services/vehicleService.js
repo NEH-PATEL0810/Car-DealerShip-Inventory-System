@@ -34,3 +34,13 @@ export const restockVehicle = async (pk, quantity) => {
     const response = await api.post(`vehicles/${pk}/restock/`, { quantity });
     return response.data;
 };
+
+export const getUserPurchases = async () => {
+    const response = await api.get("vehicles/purchases/");
+    return response.data;
+};
+
+export const getAllPurchases = async () => {
+    const response = await api.get("vehicles/purchases/all/");
+    return response.data;
+};

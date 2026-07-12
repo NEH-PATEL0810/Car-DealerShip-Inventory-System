@@ -25,6 +25,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import { searchVehicles, purchaseVehicle } from "../../services/vehicleService";
 import toast from "react-hot-toast";
+import { getErrorMessage } from "../../utils/errorParser";
 
 // Helper for vehicle images based on category
 const getCarImage = (category) => {
@@ -63,11 +64,70 @@ const Icons = {
     ),
 };
 
+const HERO_SLIDES = [
+    {
+        image: "https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=1000&auto=format&fit=crop",
+        heading: "Find Your",
+        accent: "Dream Car.",
+        subtitle: "Browse premium vehicles from trusted dealerships with real-time inventory and seamless transaction handling.",
+        stats: [
+            { label: "Available Cars", value: "150+" },
+            { label: "Customers", value: "5k+" },
+            { label: "Vehicles Sold", value: "12k+" },
+            { label: "Rating", value: "4.9 ★" }
+        ]
+    },
+    {
+        image: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=1000&auto=format&fit=crop",
+        heading: "Experience",
+        accent: "Luxury Supercars.",
+        subtitle: "Unleash high performance with our handpicked collection of exotic racing imports and modern sports coupes.",
+        stats: [
+            { label: "Top Speed", value: "205 mph" },
+            { label: "0-60 mph", value: "3.5s" },
+            { label: "Horsepower", value: "503 hp" },
+            { label: "Gearbox", value: "8-Speed" }
+        ]
+    },
+    {
+        image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=1000&auto=format&fit=crop",
+        heading: "Explore",
+        accent: "Premium SUVs.",
+        subtitle: "Go anywhere in absolute comfort. Discover top-rated luxury utility vehicles optimized for all-terrain capability.",
+        stats: [
+            { label: "Towing Cap.", value: "7,716 lbs" },
+            { label: "Ground Cl.", value: "11.1 in" },
+            { label: "Cargo Space", value: "78.8 cu ft" },
+            { label: "Drivetrain", value: "AWD" }
+        ]
+    },
+    {
+        image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=1000&auto=format&fit=crop",
+        heading: "Precision",
+        accent: "German Power.",
+        subtitle: "Sleek contours, intelligent cockpits, and exhilarating performance engineering await you in our fleet.",
+        stats: [
+            { label: "Engine Type", value: "V8 Twin-Turbo" },
+            { label: "0-60 mph", value: "3.0s" },
+            { label: "Acceleration", value: "Exhilarating" },
+            { label: "Rating", value: "4.8 ★" }
+        ]
+    }
+];
+
 function Dashboard() {
     const { user } = useContext(AuthContext);
     const [vehicles, setVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [favorites, setFavorites] = useState({});
+    const [currentSlide, setCurrentSlide] = useState(0);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+        }, 5000);
+        return () => clearInterval(timer);
+    }, []);
 
     // Filter states
     const [search, setSearch] = useState("");
@@ -138,7 +198,7 @@ function Dashboard() {
             setSuccessDialog(true);
             fetchFilteredVehicles();
         } catch (err) {
-            toast.error(err.response?.data?.message || "Purchase failed.");
+            toast.error(getErrorMessage(err, "Purchase failed."));
         } finally {
             setPurchasing(false);
         }
@@ -163,21 +223,35 @@ function Dashboard() {
                 <Container maxWidth="xl">
                     <Grid container spacing={6} sx={{ alignItems: "center" }}>
                         <Grid size={{ xs: 12, md: 6 }}>
-                            <Typography
-                                variant="h1"
-                                color="white"
-                                sx={{
-                                    fontSize: { xs: "2.8rem", md: "4.5rem" },
-                                    lineHeight: 1.1,
-                                    mb: 3,
-                                    letterSpacing: "-2px",
+                            <Box sx={{ minHeight: { xs: "auto", md: "170px" } }}>
+                                <Typography
+                                    variant="h1"
+                                    color="white"
+                                    sx={{
+                                        fontSize: { xs: "2.8rem", md: "4.5rem" },
+                                        lineHeight: 1.1,
+                                        mb: 3,
+                                        letterSpacing: "-2px",
+                                        transition: "all 0.5s ease-in-out",
+                                    }}
+                                >
+                                    {HERO_SLIDES[currentSlide].heading} <br />
+                                    <span style={{ color: "#3B82F6" }}>{HERO_SLIDES[currentSlide].accent}</span>
+                                </Typography>
+                            </Box>
+                            <Typography 
+                                variant="h6" 
+                                color="#B6BDC8" 
+                                sx={{ 
+                                    fontWeight: 300, 
+                                    mb: 5, 
+                                    maxWidth: 500, 
+                                    lineHeight: 1.6,
+                                    minHeight: { xs: "auto", md: "80px" },
+                                    transition: "all 0.5s ease-in-out",
                                 }}
                             >
-                                Find Your <br />
-                                <span style={{ color: "#3B82F6" }}>Dream Car.</span>
-                            </Typography>
-                            <Typography variant="h6" color="#B6BDC8" sx={{ fontWeight: 300, mb: 5, maxWidth: 500, lineHeight: 1.6 }}>
-                                Browse premium vehicles from trusted dealerships with real-time inventory and seamless transaction handling.
+                                {HERO_SLIDES[currentSlide].subtitle}
                             </Typography>
                             <Stack direction="row" spacing={2}>
                                 <Button
@@ -198,51 +272,98 @@ function Dashboard() {
                         </Grid>
 
                         <Grid size={{ xs: 12, md: 6 }} sx={{ position: "relative" }}>
-                            {/* Supercar Hero Image */}
+                            {/* Automated Showroom Slideshow */}
                             <Box
-                                component="img"
-                                src="https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=1000&auto=format&fit=crop"
-                                alt="Tesla Model S Supercar"
                                 sx={{
+                                    position: "relative",
                                     width: "100%",
+                                    pt: "60%", // Maintains aspect ratio
                                     borderRadius: "24px",
+                                    overflow: "hidden",
                                     boxShadow: "0px 30px 60px rgba(0,0,0,0.8)",
                                     border: "1px solid rgba(255,255,255,0.08)",
+                                    mb: 4,
                                 }}
-                            />
+                            >
+                                {HERO_SLIDES.map((slide, index) => {
+                                    const active = index === currentSlide;
+                                    return (
+                                        <Box
+                                            key={index}
+                                            component="img"
+                                            src={slide.image}
+                                            alt={slide.title}
+                                            sx={{
+                                                position: "absolute",
+                                                top: 0,
+                                                left: 0,
+                                                width: "100%",
+                                                height: "100%",
+                                                objectFit: "cover",
+                                                opacity: active ? 1 : 0,
+                                                transform: active ? "scale(1)" : "scale(1.05)",
+                                                transition: "opacity 1s ease-in-out, transform 1s ease-in-out",
+                                                zIndex: active ? 2 : 1,
+                                            }}
+                                        />
+                                    );
+                                })}
+
+                                {/* Pagination Dots Overlay */}
+                                <Box
+                                    sx={{
+                                        position: "absolute",
+                                        bottom: 20,
+                                        right: 20,
+                                        zIndex: 10,
+                                        display: "flex",
+                                        gap: 1,
+                                    }}
+                                >
+                                    {HERO_SLIDES.map((_, index) => (
+                                        <Box
+                                            key={index}
+                                            onClick={() => setCurrentSlide(index)}
+                                            sx={{
+                                                width: index === currentSlide ? 24 : 8,
+                                                height: 8,
+                                                borderRadius: "4px",
+                                                backgroundColor: index === currentSlide ? "#3B82F6" : "rgba(255,255,255,0.4)",
+                                                cursor: "pointer",
+                                                transition: "all 0.3s ease",
+                                            }}
+                                        />
+                                    ))}
+                                </Box>
+                            </Box>
 
                             {/* Floating Glass Stats Panel */}
                             <Box
                                 sx={{
                                     position: "absolute",
-                                    bottom: "-30px",
+                                    bottom: "-35px",
                                     left: "5%",
                                     right: "5%",
-                                    background: "rgba(30, 34, 43, 0.7)",
+                                    background: "rgba(24, 27, 34, 0.85)",
                                     backdropFilter: "blur(20px)",
                                     border: "1px solid rgba(255, 255, 255, 0.08)",
                                     borderRadius: "20px",
                                     p: 3,
-                                    boxShadow: "0px 20px 50px rgba(0,0,0,0.5)",
+                                    boxShadow: "0px 30px 60px rgba(0,0,0,0.6)",
+                                    zIndex: 5,
                                 }}
                             >
                                 <Grid container spacing={2} sx={{ justifyContent: "space-around" }}>
-                                    <Box sx={{ textAlign: "center" }}>
-                                        <Typography variant="h6" color="primary" sx={{ fontWeight: 800 }}>150+</Typography>
-                                        <Typography variant="caption" color="#B6BDC8">Available Cars</Typography>
-                                    </Box>
-                                    <Box sx={{ textAlign: "center" }}>
-                                        <Typography variant="h6" color="primary" sx={{ fontWeight: 800 }}>5k+</Typography>
-                                        <Typography variant="caption" color="#B6BDC8">Customers</Typography>
-                                    </Box>
-                                    <Box sx={{ textAlign: "center" }}>
-                                        <Typography variant="h6" color="primary" sx={{ fontWeight: 800 }}>12k+</Typography>
-                                        <Typography variant="caption" color="#B6BDC8">Vehicles Sold</Typography>
-                                    </Box>
-                                    <Box sx={{ textAlign: "center" }}>
-                                        <Typography variant="h6" color="primary" sx={{ fontWeight: 800 }}>4.9 ★</Typography>
-                                        <Typography variant="caption" color="#B6BDC8">Rating</Typography>
-                                    </Box>
+                                    {HERO_SLIDES[currentSlide].stats.map((stat, i) => (
+                                        <Box key={i} sx={{ textAlign: "center" }}>
+                                            <Typography variant="h6" color="primary" sx={{ fontWeight: 800 }}>
+                                                {stat.value}
+                                            </Typography>
+                                            <Typography variant="caption" color="#B6BDC8">
+                                                {stat.label}
+                                            </Typography>
+                                        </Box>
+                                    ))}
                                 </Grid>
                             </Box>
                         </Grid>
@@ -465,10 +586,10 @@ function Dashboard() {
                             margin: "0 auto",
                         }}
                     >
-                        <Typography variant="h4" color="white" sx={{ fontWeight: 800, mb: 2 }}>
+                        <Typography variant="h4" color="white" align="center" sx={{ fontWeight: 800, mb: 2 }}>
                             Unlock Our Showroom
                         </Typography>
-                        <Typography variant="body1" color="#B6BDC8" sx={{ mb: 4, maxWidth: 500, margin: "0 auto 30px", lineHeight: 1.6 }}>
+                        <Typography variant="body1" color="#B6BDC8" align="center" sx={{ mb: 4, maxWidth: 500, margin: "0 auto 30px", lineHeight: 1.6 }}>
                             Our exclusive collection of premium high-performance vehicles is reserved for registered members. Create an account or sign in to browse active inventory, pricing details, and request delivery.
                         </Typography>
                         <Stack direction="row" spacing={2} justifyContent="center">
@@ -605,11 +726,11 @@ function Dashboard() {
                         </svg>
                     </Box>
                 </Box>
-                <DialogTitle sx={{ color: "white", fontWeight: 800, p: 0 }}>
+                <DialogTitle sx={{ color: "white", fontWeight: 800, p: 0, textAlign: "center" }}>
                     Order Confirmed!
                 </DialogTitle>
-                <DialogContent sx={{ p: 0, mt: 1, mb: 3 }}>
-                    <Typography variant="body2" color="#B6BDC8">
+                <DialogContent sx={{ p: 0, mt: 1, mb: 3, textAlign: "center" }}>
+                    <Typography variant="body2" color="#B6BDC8" align="center">
                         Your transaction was processed successfully. Our sales reps will reach out shortly for delivery scheduling.
                     </Typography>
                 </DialogContent>

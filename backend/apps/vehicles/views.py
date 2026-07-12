@@ -3,9 +3,9 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import VehicleSerializer
+from .serializers import VehicleSerializer, PurchaseSerializer
 from .services import VehicleService
-from .models import Vehicle
+from .models import Vehicle, Purchase
 
 class VehicleAPIView(APIView):
     """
@@ -165,7 +165,8 @@ class PurchaseVehicleAPIView(APIView):
 
         try:
             vehicle = VehicleService.purchase_vehicle(
-                vehicle
+                vehicle,
+                request.user,
             )
         except ValueError as e:
             return Response(
@@ -243,3 +244,47 @@ class RestockVehicleAPIView(APIView):
             },
             status=status.HTTP_200_OK,
         )
+
+
+class UserPurchasesAPIView(APIView):
+    """
+    APIView to list purchases made by the logged-in user.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        purchases = Purchase.objects.filter(user=request.user)
+        serializer = PurchaseSerializer(purchases, many=True)
+        return Response(
+            {
+                "message": "Purchased vehicles retrieved successfully.",
+                "data": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+
+class AllPurchasesAPIView(APIView):
+    """
+    APIView to list all dealership purchases (accessible only to administrators).
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not request.user.is_staff:
+            return Response(
+                {
+                    "message": "Only administrators can view all purchases."
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        purchases = Purchase.objects.all()
+        serializer = PurchaseSerializer(purchases, many=True)
+        return Response(
+            {
+                "message": "All dealership purchases retrieved successfully.",
+                "data": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )

@@ -11,6 +11,7 @@ import {
     Grid,
 } from "@mui/material";
 import { registerUser } from "../../services/authService";
+import { getErrorMessage } from "../../utils/errorParser";
 import toast from "react-hot-toast";
 
 function Register() {
@@ -32,20 +33,7 @@ function Register() {
             toast.success(data.message || "Account created. Please sign in.");
             navigate("/login");
         } catch (err) {
-            const dataErrors = err.response?.data?.errors;
-            let errMsg = err.response?.data?.message || "Registration failed. Please check inputs.";
-            if (dataErrors) {
-                const messages = [];
-                Object.entries(dataErrors).forEach(([field, errors]) => {
-                    const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
-                    if (Array.isArray(errors)) {
-                        messages.push(`${fieldName}: ${errors.join(" ")}`);
-                    } else {
-                        messages.push(`${fieldName}: ${errors}`);
-                    }
-                });
-                errMsg = messages.join(" | ");
-            }
+            const errMsg = getErrorMessage(err, "Registration failed. Please check inputs.");
             setError(errMsg);
             toast.error(errMsg);
         } finally {

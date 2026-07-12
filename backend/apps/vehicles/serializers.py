@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Vehicle
+from .models import Vehicle, Purchase
 class VehicleSerializer(serializers.ModelSerializer):
     # Serializer for creating and updating vehicles
 
@@ -56,3 +56,18 @@ class VehicleSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Quantity cannot be negative.")
         
         return value
+
+
+class PurchaseSerializer(serializers.ModelSerializer):
+    vehicle = VehicleSerializer(read_only=True)
+    username = serializers.CharField(source="user.username", read_only=True)
+
+    class Meta:
+        model = Purchase
+        fields = (
+            "id",
+            "username",
+            "vehicle",
+            "price_paid",
+            "purchased_at",
+        )

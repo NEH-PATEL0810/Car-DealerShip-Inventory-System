@@ -13,7 +13,19 @@ import {
     Stack,
 } from "@mui/material";
 import { AuthContext } from "../../context/AuthContext";
+import { getUserPurchases } from "../../services/vehicleService";
 import toast from "react-hot-toast";
+
+const getCarImage = (category) => {
+    const images = {
+        SUV: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=300&auto=format&fit=crop",
+        Sedan: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=300&auto=format&fit=crop",
+        Hatchback: "https://images.unsplash.com/photo-1590362891991-f776e747a588?q=80&w=300&auto=format&fit=crop",
+        Truck: "https://images.unsplash.com/photo-1533519083849-0d28362d2950?q=80&w=300&auto=format&fit=crop",
+        Luxury: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=300&auto=format&fit=crop",
+    };
+    return images[category] || images["Luxury"];
+};
 
 function Profile() {
     const { user } = useContext(AuthContext);
@@ -27,6 +39,8 @@ function Profile() {
     const [displayName, setDisplayName] = useState(() => {
         return localStorage.getItem("display_name") || user?.username || "";
     });
+    const [purchases, setPurchases] = useState([]);
+    const [purchasesLoading, setPurchasesLoading] = useState(true);
 
     useEffect(() => {
         if (!user) {
@@ -34,6 +48,22 @@ function Profile() {
             navigate("/login");
         }
     }, [user, navigate]);
+
+    useEffect(() => {
+        if (user) {
+            const fetchPurchases = async () => {
+                try {
+                    const data = await getUserPurchases();
+                    setPurchases(data.data || []);
+                } catch (err) {
+                    toast.error("Failed to load purchase history.");
+                } finally {
+                    setPurchasesLoading(false);
+                }
+            };
+            fetchPurchases();
+        }
+    }, [user]);
 
     const handlePhotoUpload = (e) => {
         const file = e.target.files[0];
@@ -57,6 +87,7 @@ function Profile() {
             localStorage.setItem("profile_photo", base64Data);
             setAvatarUrl(base64Data);
             toast.success("Profile photo updated successfully!");
+            window.dispatchEvent(new Event("profile-updated"));
         };
         reader.readAsDataURL(file);
     };
@@ -65,6 +96,7 @@ function Profile() {
         localStorage.removeItem("profile_photo");
         setAvatarUrl("");
         toast.success("Profile photo removed.");
+        window.dispatchEvent(new Event("profile-updated"));
     };
 
     const handleSaveProfile = () => {
@@ -90,11 +122,11 @@ function Profile() {
                         boxShadow: "0px 30px 60px rgba(0,0,0,0.5)",
                     }}
                 >
-                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 4 }}>
-                        <Typography variant="h4" color="white" sx={{ fontWeight: 800, mb: 1, fontFamily: "'Sora', sans-serif" }}>
+                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 4, width: "100%" }}>
+                        <Typography variant="h4" color="white" align="center" sx={{ fontWeight: 800, mb: 1, fontFamily: "'Sora', sans-serif" }}>
                             Your CarShip Profile
                         </Typography>
-                        <Typography variant="body2" color="#B6BDC8">
+                        <Typography variant="body2" color="#B6BDC8" align="center">
                             Manage your profile details and showroom preferences.
                         </Typography>
                     </Box>
@@ -227,6 +259,64 @@ function Profile() {
                             </Stack>
                         </Grid>
                     </Grid>
+
+                    <Divider sx={{ borderColor: "rgba(255,255,255,0.06)", my: 5 }} />
+
+                    {/* Order History Section */}
+                    <Box>
+                        <Typography variant="h5" color="white" sx={{ fontWeight: 800, mb: 3, fontFamily: "'Sora', sans-serif" }}>
+                            Purchased Vehicles History
+                        </Typography>
+                        {purchasesLoading ? (
+                            <Typography variant="body2" color="#B6BDC8">Loading order history...</Typography>
+                        ) : purchases.length === 0 ? (
+                            <Typography variant="body2" color="#B6BDC8">No vehicle purchases recorded yet.</Typography>
+                        ) : (
+                            <Stack spacing={2}>
+                                {purchases.map((purchase) => (
+                                    <Box
+                                        key={purchase.id}
+                                        sx={{
+                                            p: 2,
+                                            borderRadius: "16px",
+                                            backgroundColor: "#1E222B",
+                                            border: "1px solid rgba(255,255,255,0.04)",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 3,
+                                            justifyContent: "space-between",
+                                            flexWrap: "wrap",
+                                        }}
+                                    >
+                                        <Box display="flex" alignItems="center" gap={2}>
+                                            <Box
+                                                component="img"
+                                                src={getCarImage(purchase.vehicle?.category)}
+                                                alt={purchase.vehicle?.model}
+                                                sx={{ width: 80, height: 50, borderRadius: "8px", objectFit: "cover" }}
+                                            />
+                                            <Box>
+                                                <Typography variant="body1" color="white" fontWeight={700}>
+                                                    {purchase.vehicle?.make} {purchase.vehicle?.model}
+                                                </Typography>
+                                                <Typography variant="caption" color="#B6BDC8">
+                                                    Category: {purchase.vehicle?.category} | Ordered on {new Date(purchase.purchased_at).toLocaleDateString()}
+                                                </Typography>
+                                            </Box>
+                                        </Box>
+                                        <Box sx={{ textAlign: "right" }}>
+                                            <Typography variant="h6" color="#22C55E" fontWeight={800}>
+                                                ${parseFloat(purchase.price_paid).toLocaleString()}
+                                            </Typography>
+                                            <Typography variant="caption" color="#B6BDC8">
+                                                Paid via Dealer Financing
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                ))}
+                            </Stack>
+                        )}
+                    </Box>
                 </Paper>
             </Container>
         </Box>

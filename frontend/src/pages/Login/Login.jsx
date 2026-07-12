@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { AuthContext } from "../../context/AuthContext";
 import { loginUser } from "../../services/authService";
+import { getErrorMessage } from "../../utils/errorParser";
 import toast from "react-hot-toast";
 
 function Login() {
@@ -34,20 +35,7 @@ function Login() {
             toast.success(data.message || "Welcome back to CarShip.");
             navigate("/");
         } catch (err) {
-            const dataErrors = err.response?.data?.errors;
-            let errMsg = err.response?.data?.message || "Invalid credentials.";
-            if (dataErrors) {
-                const messages = [];
-                Object.entries(dataErrors).forEach(([field, errors]) => {
-                    const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
-                    if (Array.isArray(errors)) {
-                        messages.push(`${fieldName}: ${errors.join(" ")}`);
-                    } else {
-                        messages.push(`${fieldName}: ${errors}`);
-                    }
-                });
-                errMsg = messages.join(" | ");
-            }
+            const errMsg = getErrorMessage(err, "Invalid credentials.");
             setError(errMsg);
             toast.error(errMsg);
         } finally {

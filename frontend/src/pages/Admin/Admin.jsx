@@ -22,6 +22,7 @@ import {
     Chip,
     CircularProgress,
     IconButton,
+    Stack,
 } from "@mui/material";
 import { AuthContext } from "../../context/AuthContext";
 import {
@@ -30,8 +31,10 @@ import {
     updateVehicle,
     deleteVehicle,
     restockVehicle,
+    getAllPurchases,
 } from "../../services/vehicleService";
 import toast from "react-hot-toast";
+import { getErrorMessage } from "../../utils/errorParser";
 
 // Helper for images
 const getCarImage = (category) => {
@@ -76,6 +79,12 @@ const Icons = {
             <line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" />
         </svg>
     ),
+    Sales: () => (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23" />
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+        </svg>
+    ),
 };
 
 function Admin() {
@@ -85,6 +94,8 @@ function Admin() {
     const [vehicles, setVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [sidebarTab, setSidebarTab] = useState("inventory");
+    const [purchases, setPurchases] = useState([]);
+    const [purchasesLoading, setPurchasesLoading] = useState(true);
 
     // Form Dialog states
     const [formOpen, setFormOpen] = useState(false);
@@ -120,6 +131,7 @@ function Admin() {
 
     const fetchAdminData = async () => {
         setLoading(true);
+        setPurchasesLoading(true);
         try {
             const data = await getVehicles();
             setVehicles(data.data || []);
@@ -127,6 +139,15 @@ function Admin() {
             toast.error("Failed to fetch fleet inventory.");
         } finally {
             setLoading(false);
+        }
+
+        try {
+            const data = await getAllPurchases();
+            setPurchases(data.data || []);
+        } catch (err) {
+            toast.error("Failed to fetch sales transactions.");
+        } finally {
+            setPurchasesLoading(false);
         }
     };
 
@@ -177,7 +198,7 @@ function Admin() {
             setFormOpen(false);
             fetchAdminData();
         } catch (err) {
-            toast.error(err.response?.data?.message || "Failed to save vehicle details.");
+            toast.error(getErrorMessage(err, "Failed to save vehicle details."));
         } finally {
             setSaving(false);
         }
@@ -196,7 +217,7 @@ function Admin() {
             setDeleteOpen(false);
             fetchAdminData();
         } catch (err) {
-            toast.error("Failed to delete vehicle.");
+            toast.error(getErrorMessage(err, "Failed to delete vehicle."));
         } finally {
             setDeleting(false);
         }
@@ -223,7 +244,7 @@ function Admin() {
             setRestockOpen(false);
             fetchAdminData();
         } catch (err) {
-            toast.error(err.response?.data?.message || "Restock failed.");
+            toast.error(getErrorMessage(err, "Restock failed."));
         } finally {
             setRestocking(false);
         }
@@ -282,6 +303,19 @@ function Admin() {
                     >
                         Fleet Inventory
                     </Button>
+                    <Button
+                        variant={sidebarTab === "sales" ? "contained" : "text"}
+                        onClick={() => setSidebarTab("sales")}
+                        startIcon={<Icons.Sales />}
+                        sx={{
+                            justifyContent: "flex-start",
+                            color: sidebarTab === "sales" ? "white" : "#B6BDC8",
+                            backgroundColor: sidebarTab === "sales" ? "#3B82F6" : "transparent",
+                            py: 1.5,
+                        }}
+                    >
+                        Sales Transactions
+                    </Button>
                 </Stack>
             </Box>
 
@@ -297,10 +331,14 @@ function Admin() {
                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 5 }}>
                         <Box>
                             <Typography variant="h4" color="white" sx={{ fontWeight: 800 }}>
-                                {sidebarTab === "inventory" ? "Fleet Inventory" : "System Analytics"}
+                                {sidebarTab === "inventory" ? "Fleet Inventory" : sidebarTab === "sales" ? "Sales Transactions" : "System Analytics"}
                             </Typography>
                             <Typography variant="body2" color="#B6BDC8">
-                                Manage dealership vehicles and inventory counts.
+                                {sidebarTab === "inventory" 
+                                    ? "Manage dealership vehicles and inventory counts." 
+                                    : sidebarTab === "sales"
+                                    ? "Track which vehicle has been purchased by which customer."
+                                    : "Real-time key performance indicators and reports."}
                             </Typography>
                         </Box>
                         {sidebarTab === "inventory" && (
@@ -317,34 +355,36 @@ function Admin() {
                     </Box>
 
                     {/* METRIC SUMMARIES */}
-                    <Grid container spacing={3} mb={5}>
-                        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                            <Paper sx={{ p: 3, backgroundColor: "#1E222B" }}>
-                                <Typography variant="caption" color="#B6BDC8">TOTAL FLEET</Typography>
-                                <Typography variant="h4" color="white" sx={{ fontWeight: 800, mt: 1 }}>{totalFleet}</Typography>
-                            </Paper>
+                    <Box sx={{ mb: 6 }}>
+                        <Grid container spacing={3}>
+                            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                                <Paper sx={{ p: 3, backgroundColor: "#1E222B" }}>
+                                    <Typography variant="caption" color="#B6BDC8">TOTAL FLEET</Typography>
+                                    <Typography variant="h4" color="white" sx={{ fontWeight: 800, mt: 1 }}>{totalFleet}</Typography>
+                                </Paper>
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                                <Paper sx={{ p: 3, backgroundColor: "#1E222B" }}>
+                                    <Typography variant="caption" color="#B6BDC8">AVAILABLE CARS</Typography>
+                                    <Typography variant="h4" color="#22C55E" sx={{ fontWeight: 800, mt: 1 }}>{availableFleet}</Typography>
+                                </Paper>
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                                <Paper sx={{ p: 3, backgroundColor: "#1E222B" }}>
+                                    <Typography variant="caption" color="#B6BDC8">OUT OF STOCK</Typography>
+                                    <Typography variant="h4" color="#EF4444" sx={{ fontWeight: 800, mt: 1 }}>{outOfStockFleet}</Typography>
+                                </Paper>
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                                <Paper sx={{ p: 3, backgroundColor: "#1E222B" }}>
+                                    <Typography variant="caption" color="#B6BDC8">ASSET VALUE</Typography>
+                                    <Typography variant="h4" color="white" sx={{ fontWeight: 800, mt: 1 }}>
+                                        ${totalAssets.toLocaleString()}
+                                    </Typography>
+                                </Paper>
+                            </Grid>
                         </Grid>
-                        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                            <Paper sx={{ p: 3, backgroundColor: "#1E222B" }}>
-                                <Typography variant="caption" color="#B6BDC8">AVAILABLE CARS</Typography>
-                                <Typography variant="h4" color="#22C55E" sx={{ fontWeight: 800, mt: 1 }}>{availableFleet}</Typography>
-                            </Paper>
-                        </Grid>
-                        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                            <Paper sx={{ p: 3, backgroundColor: "#1E222B" }}>
-                                <Typography variant="caption" color="#B6BDC8">OUT OF STOCK</Typography>
-                                <Typography variant="h4" color="#EF4444" sx={{ fontWeight: 800, mt: 1 }}>{outOfStockFleet}</Typography>
-                            </Paper>
-                        </Grid>
-                        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                            <Paper sx={{ p: 3, backgroundColor: "#1E222B" }}>
-                                <Typography variant="caption" color="#B6BDC8">ASSET VALUE</Typography>
-                                <Typography variant="h4" color="white" sx={{ fontWeight: 800, mt: 1 }}>
-                                    ${totalAssets.toLocaleString()}
-                                </Typography>
-                            </Paper>
-                        </Grid>
-                    </Grid>
+                    </Box>
 
                     {/* VEHICLE MANAGEMENT TABLE */}
                     {sidebarTab === "inventory" && (
@@ -361,13 +401,13 @@ function Admin() {
                                 <Table>
                                     <TableHead sx={{ backgroundColor: "rgba(255,255,255,0.02)" }}>
                                         <TableRow>
-                                            <TableCell sx={{ color: "#B6BDC8", fontWeight: 700 }}>Thumbnail</TableCell>
-                                            <TableCell sx={{ color: "#B6BDC8", fontWeight: 700 }}>Make</TableCell>
-                                            <TableCell sx={{ color: "#B6BDC8", fontWeight: 700 }}>Model</TableCell>
-                                            <TableCell sx={{ color: "#B6BDC8", fontWeight: 700 }}>Category</TableCell>
-                                            <TableCell sx={{ color: "#B6BDC8", fontWeight: 700 }}>Price</TableCell>
-                                            <TableCell sx={{ color: "#B6BDC8", fontWeight: 700 }}>Stock</TableCell>
-                                            <TableCell align="right" sx={{ color: "#B6BDC8", fontWeight: 700 }}>Actions</TableCell>
+                                            <TableCell sx={{ color: "#B6BDC8", fontWeight: 700, py: 2.5, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>Thumbnail</TableCell>
+                                            <TableCell sx={{ color: "#B6BDC8", fontWeight: 700, py: 2.5, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>Make</TableCell>
+                                            <TableCell sx={{ color: "#B6BDC8", fontWeight: 700, py: 2.5, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>Model</TableCell>
+                                            <TableCell sx={{ color: "#B6BDC8", fontWeight: 700, py: 2.5, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>Category</TableCell>
+                                            <TableCell sx={{ color: "#B6BDC8", fontWeight: 700, py: 2.5, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>Price</TableCell>
+                                            <TableCell sx={{ color: "#B6BDC8", fontWeight: 700, py: 2.5, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>Stock</TableCell>
+                                            <TableCell align="right" sx={{ color: "#B6BDC8", fontWeight: 700, py: 2.5, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>Actions</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -375,7 +415,7 @@ function Admin() {
                                             const isOutOfStock = car.quantity <= 0;
                                             return (
                                                 <TableRow key={car.id} hover sx={{ "&:hover": { backgroundColor: "rgba(255,255,255,0.01)" } }}>
-                                                    <TableCell>
+                                                    <TableCell sx={{ py: 2, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>
                                                         <Box
                                                             component="img"
                                                             src={getCarImage(car.category)}
@@ -383,22 +423,22 @@ function Admin() {
                                                             sx={{ width: 60, height: 40, borderRadius: "6px", objectFit: "cover" }}
                                                         />
                                                     </TableCell>
-                                                    <TableCell sx={{ color: "white", fontWeight: 600 }}>{car.make}</TableCell>
-                                                    <TableCell sx={{ color: "white" }}>{car.model}</TableCell>
-                                                    <TableCell>
+                                                    <TableCell sx={{ color: "white", fontWeight: 600, py: 2, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>{car.make}</TableCell>
+                                                    <TableCell sx={{ color: "white", py: 2, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>{car.model}</TableCell>
+                                                    <TableCell sx={{ py: 2, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>
                                                         <Chip label={car.category} size="small" sx={{ borderRadius: "6px" }} />
                                                     </TableCell>
-                                                    <TableCell sx={{ color: "white", fontWeight: 600 }}>
+                                                    <TableCell sx={{ color: "white", fontWeight: 600, py: 2, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>
                                                         ${parseFloat(car.price).toLocaleString()}
                                                     </TableCell>
-                                                    <TableCell>
+                                                    <TableCell sx={{ py: 2, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>
                                                         {isOutOfStock ? (
                                                             <Chip label="Out of Stock" color="error" size="small" sx={{ fontWeight: 700, borderRadius: "6px" }} />
                                                         ) : (
                                                             <Chip label={`${car.quantity} items`} color="success" size="small" sx={{ fontWeight: 700, borderRadius: "6px" }} />
                                                         )}
                                                     </TableCell>
-                                                    <TableCell align="right">
+                                                    <TableCell align="right" sx={{ py: 2, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>
                                                         <Button
                                                             size="small"
                                                             color="success"
@@ -417,6 +457,63 @@ function Admin() {
                                                 </TableRow>
                                             );
                                         })}
+                                    </TableBody>
+                                </Table>
+                            )}
+                        </TableContainer>
+                    )}
+
+                    {sidebarTab === "sales" && (
+                        <TableContainer component={Paper} sx={{ backgroundColor: "#1E222B", borderRadius: "16px" }}>
+                            {purchasesLoading ? (
+                                <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
+                                    <CircularProgress color="primary" />
+                                </Box>
+                            ) : purchases.length === 0 ? (
+                                <Box sx={{ textAlign: "center", py: 8 }}>
+                                    <Typography variant="body1" color="#B6BDC8">No vehicle sales transactions recorded yet.</Typography>
+                                </Box>
+                            ) : (
+                                <Table>
+                                    <TableHead sx={{ backgroundColor: "rgba(255,255,255,0.02)" }}>
+                                        <TableRow>
+                                            <TableCell sx={{ color: "#B6BDC8", fontWeight: 700, py: 2.5, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>Purchased Vehicle</TableCell>
+                                            <TableCell sx={{ color: "#B6BDC8", fontWeight: 700, py: 2.5, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>Buyer</TableCell>
+                                            <TableCell sx={{ color: "#B6BDC8", fontWeight: 700, py: 2.5, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>Category</TableCell>
+                                            <TableCell sx={{ color: "#B6BDC8", fontWeight: 700, py: 2.5, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>Purchase Date</TableCell>
+                                            <TableCell align="right" sx={{ color: "#B6BDC8", fontWeight: 700, py: 2.5, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>Amount Paid</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {purchases.map((purchase) => (
+                                            <TableRow key={purchase.id} hover sx={{ "&:hover": { backgroundColor: "rgba(255,255,255,0.01)" } }}>
+                                                <TableCell sx={{ py: 2, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>
+                                                    <Box display="flex" alignItems="center" gap={2}>
+                                                        <Box
+                                                            component="img"
+                                                            src={getCarImage(purchase.vehicle?.category)}
+                                                            alt={purchase.vehicle?.model}
+                                                            sx={{ width: 60, height: 40, borderRadius: "6px", objectFit: "cover" }}
+                                                        />
+                                                        <Typography variant="body2" color="white" fontWeight={600}>
+                                                            {purchase.vehicle?.make} {purchase.vehicle?.model}
+                                                        </Typography>
+                                                    </Box>
+                                                </TableCell>
+                                                <TableCell sx={{ py: 2, px: 3, borderColor: "rgba(255,255,255,0.06)" }}>
+                                                    <Chip label={`@${purchase.username}`} size="small" sx={{ backgroundColor: "rgba(59,130,246,0.1)", color: "#3B82F6", fontWeight: 600, border: "1px solid rgba(59,130,246,0.2)" }} />
+                                                </TableCell>
+                                                <TableCell sx={{ py: 2, px: 3, color: "#B6BDC8", borderColor: "rgba(255,255,255,0.06)" }}>
+                                                    {purchase.vehicle?.category}
+                                                </TableCell>
+                                                <TableCell sx={{ py: 2, px: 3, color: "#B6BDC8", borderColor: "rgba(255,255,255,0.06)" }}>
+                                                    {new Date(purchase.purchased_at).toLocaleString()}
+                                                </TableCell>
+                                                <TableCell align="right" sx={{ py: 2, px: 3, color: "#22C55E", fontWeight: 800, borderColor: "rgba(255,255,255,0.06)" }}>
+                                                    ${parseFloat(purchase.price_paid).toLocaleString()}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
                                     </TableBody>
                                 </Table>
                             )}
@@ -557,11 +654,11 @@ function Admin() {
                         </svg>
                     </Box>
                 </Box>
-                <DialogTitle sx={{ color: "white", fontWeight: 800, p: 0 }}>
+                <DialogTitle sx={{ color: "white", fontWeight: 800, p: 0, textAlign: "center" }}>
                     Are you sure?
                 </DialogTitle>
-                <DialogContent sx={{ p: 0, mt: 1, mb: 3 }}>
-                    <Typography variant="body2" color="#B6BDC8">
+                <DialogContent sx={{ p: 0, mt: 1, mb: 3, textAlign: "center" }}>
+                    <Typography variant="body2" color="#B6BDC8" align="center">
                         This action is permanent and will completely delete the selected vehicle from dealership inventory records.
                     </Typography>
                 </DialogContent>

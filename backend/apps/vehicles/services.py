@@ -77,7 +77,7 @@ class VehicleService:
         vehicle.delete()
 
     @staticmethod
-    def purchase_vehicle(vehicle):
+    def purchase_vehicle(vehicle, user):
         """
         Purchase a vehicle by decreasing its inventory quantity by one.
         """
@@ -86,6 +86,13 @@ class VehicleService:
         
         vehicle.quantity -= 1
         vehicle.save()
+
+        from vehicles.models import Purchase
+        Purchase.objects.create(
+            user=user,
+            vehicle=vehicle,
+            price_paid=vehicle.price,
+        )
 
         return vehicle
 

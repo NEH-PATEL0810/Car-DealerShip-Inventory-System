@@ -1,3 +1,4 @@
+from django.utils.translation import trim_whitespace
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
@@ -58,4 +59,17 @@ class RegistrationSerializer(serializers.ModelSerializer):
             email=validated_data["email"],
             password=validated_data["password"],
         )
+
+
+class LoginSerializer(serializers.Serializer):
+    # RESPONSIBLE FOR VALIDATING USER LOGIN REQUESTS
+
+    username = serializers.CharField(required=True,allow_blank=False,trim_whitespace=True)
+
+    password= serializers.CharField(
+        required = True,
+        write_only=True,
+        allow_blank=False,
+        style={"input_type","password"},
+    )
         

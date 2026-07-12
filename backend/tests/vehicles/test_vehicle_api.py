@@ -54,9 +54,15 @@ class TestVehicleAPI:
 
         body = response.json()
 
-        assert body["make"] == "Toyota"
+        assert body["message"] == "Vehicle created successfully."
 
-        assert body["model"] == "Fortuner"
+        assert body["data"]["make"] == "Toyota"
+
+        assert body["data"]["model"] == "Fortuner"
+
+        assert body["data"]["category"] == "SUV"
+
+        assert body["data"]["quantity"] == 10
 
     def test_create_vehicle_unauthorized(
         self,

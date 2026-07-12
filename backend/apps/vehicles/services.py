@@ -81,6 +81,18 @@ class VehicleService:
         vehicle.save()
 
         return vehicle
-    
+
+    @staticmethod
+    def restock_vehicle(vehicle,quantity):
+        # Increase vehicle inventory
+
+        if quantity <=0 :
+            raise ValueError(
+                "Restock quantity must be greater than zero."
+            )
+
+        vehicle.quantity += quantity
+        vehicle.save()
+        return vehicle
 
     

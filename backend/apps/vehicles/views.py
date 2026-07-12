@@ -173,3 +173,67 @@ class PurchaseVehicleAPIView(APIView):
             },
             status=status.HTTP_200_OK,
         )
+
+class RestockVehicleAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+
+        if not request.user.is_staff:
+
+            return Response(
+                {
+                    "message":
+                    "Only administrators can restock vehicles."
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        vehicle = get_object_or_404(
+            Vehicle,
+            pk=pk,
+        )
+
+        quantity = request.data.get("quantity")
+
+        if quantity is None:
+
+            return Response(
+                {
+                    "message":
+                    "Quantity is required."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+
+            quantity = int(quantity)
+
+            vehicle = VehicleService.restock_vehicle(
+                vehicle,
+                quantity,
+            )
+
+        except ValueError as e:
+
+            return Response(
+                {
+                    "message": str(e),
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        serializer = VehicleSerializer(
+            vehicle
+        )
+
+        return Response(
+            {
+                "message":
+                "Vehicle restocked successfully.",
+                "data": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )

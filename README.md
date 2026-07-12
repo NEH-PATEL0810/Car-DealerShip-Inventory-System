@@ -8,7 +8,7 @@ CarShip enables users to browse available vehicles, search inventory, purchase v
 
 ## Demo Video
 
-> **Demo Video:** *(Add your YouTube / Google Drive / Loom link here)*
+> **Demo Video:** [Watch the walkthrough here](https://youtu.be/PJKjMy5G2rE)
 
 ---
 
@@ -411,6 +411,6 @@ Using AI significantly accelerated development by reducing boilerplate work and 
 
 **Neh Patel**
 
-GitHub: https://github.com/NEH-PATEL0810
-LinkedIn: https://www.linkedin.com/in/neh-patel-573a5728 
-Email: nehp00417@gmail.com 
+- **GitHub**: https://github.com/NEH-PATEL0810
+- **LinkedIn**: https://www.linkedin.com/in/neh-patel-573a5728
+- **Email**: nehp00417@gmail.com 

@@ -9,7 +9,7 @@
 # pyrefly: ignore [missing-import]
 import pytest
 
-from apps.vehicles.models import Vehicle
+from vehicles.models import Vehicle
 
 @pytest.mark.django_db
 def test_create_vehicle():

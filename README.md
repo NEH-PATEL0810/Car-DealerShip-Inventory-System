@@ -409,8 +409,8 @@ Using AI significantly accelerated development by reducing boilerplate work and 
 
 # Author
 
-**Your Name**
+**Neh Patel**
 
-GitHub: https://github.com/your-profile  
-LinkedIn: https://linkedin.com/in/your-profile  
-Email: your-email@example.com  
+GitHub: https://github.com/NEH-PATEL0810
+LinkedIn: https://www.linkedin.com/in/neh-patel-573a5728 
+Email: nehp00417@gmail.com 

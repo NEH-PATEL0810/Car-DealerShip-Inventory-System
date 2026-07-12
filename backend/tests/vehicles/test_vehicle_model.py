@@ -9,7 +9,7 @@
 # pyrefly: ignore [missing-import]
 import pytest
 
-# pyrefly: ignore [missing-import]
+# pyrefly: ignore [reportMissingImports]
 from vehicles.models import Vehicle
 
 @pytest.mark.django_db

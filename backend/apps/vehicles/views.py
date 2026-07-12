@@ -44,3 +44,31 @@ class VehicleAPIView(APIView):
             },
             status=status.HTTP_201_CREATED,
         )
+
+
+class VehicleSearchAPIView(APIView):
+    
+    # API endpoint for searching vehicles.
+    
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        vehicles = VehicleService.search_vehicles(
+            request.query_params
+        )
+
+        serializer = VehicleSerializer(
+            vehicles,
+            many=True,
+        )
+
+        return Response(
+            {
+                "message": "Vehicles retrieved successfully.",
+                "count": len(serializer.data),
+                "data": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )

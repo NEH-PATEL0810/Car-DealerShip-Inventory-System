@@ -352,6 +352,34 @@ To generate and view the detailed HTML coverage report locally:
 1. Run the coverage generation commands in the **Coverage Reports** section below.
 2. Open `backend/htmlcov/index.html` in your browser.
 
+### Coverage Report Screenshots
+
+#### Full Coverage Table
+
+> ![Coverage Report Part 1](screenshots/coverage_report_1.png)
+> ![Coverage Report Part 2](screenshots/coverage_report_2.png)
+> ![Coverage Report Part 3](screenshots/coverage_report_3.png)
+
+---
+
+#### Uncovered Files ("hide covered" checked)
+
+> ![Coverage Report Uncovered Files](screenshots/coverage_report_hide_covered_files.png)
+
+---
+
+#### Uncovered Classes ("hide covered" and "Classes" view checked)
+
+> ![Coverage Report Uncovered Classes](screenshots/coverage_report_hide_covered_classes.png)
+
+---
+
+#### Uncovered Functions ("hide covered" and "Functions" view checked)
+
+> ![Coverage Report Uncovered Functions](screenshots/coverage_report_hide_covered_functions.png)
+
+---
+
 ## Coverage Reports
 
 ```bash
